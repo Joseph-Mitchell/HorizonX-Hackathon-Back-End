@@ -10,12 +10,11 @@ const languageModelSchema = new Schema({
     model_analysis: { type: String, required: false },
     dependencies: { type: String, required: false },
     quality_control: { type: String, required: false },
-    model_analysis: { type: String, required: false },
     size: { type: String, required: false, default: "not known" },
     access: { type: String, required: true, enum: ["open", "closed", "limited"] },
     license: { type: String, required: false, default: "not known" },
     intended_uses: { type: String, required: false, default: "not known" },
-    prohibited_uses: { type: String, required: false, default: "not known" },
+    prohibited_uses: { type: String, required: false },
     monitoring: { type: String, required: false, default: "not known" },
     feedback: { type: String, required: false, default: "not known" },
 });

@@ -1,6 +1,6 @@
 import { Router as ExpressRouter } from "express";
 
-export default class Router {
+export default class LanguageModelRouter {
     #router;
     #pathRoot;
     #controller;
@@ -22,7 +22,7 @@ export default class Router {
     }
     
     #initialiseRouter() {
-        this.#router.get("/models/all", (req, res) => {
+        this.#router.get("/all", (req, res) => {
             this.#controller.getList(req, res);
         });
     }
