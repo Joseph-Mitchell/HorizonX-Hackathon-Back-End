@@ -76,4 +76,60 @@ describe("Account Controller", () => {
             sinon.assert.calledWith(stubbedResponse.status, 404);
         });
     });
+    
+    describe("login", () => {
+        beforeEach(() => {
+            process.env.SECRET = "testSecret";
+            
+            stubbedService = {
+                getAccountById: sinon.stub(),
+            };
+            stubbedResponse = {
+                status: sinon.stub().returnsThis(),
+                json: sinon.stub()
+            };
+            
+            testController = new AccountController(stubbedService);
+            testRequest = {
+                body: {
+                    id: existingAccounts[0]._id,
+                }
+            };
+            
+            const responseAccount = {
+                _id: existingAccounts[0]._id,
+                username: existingAccounts[0].username,
+                password: bcrypt.hashSync(existingAccounts[0].password, 8),
+                role: existingAccounts[0].role,
+            };
+            stubbedService.getAccountById.resolves(responseAccount);
+        });
+        
+        afterEach(() => {
+            stubbedService = undefined;
+            stubbedResponse = undefined;
+            testController = undefined;
+            testRequest = undefined;
+        });
+        
+        it("should respond 200 in normal circumstances", async () => {
+            //Act
+            const response = await testController.tokenLogin(testRequest, stubbedResponse);
+            
+            //Assert
+            sinon.assert.calledWith(stubbedService.getAccountById, testRequest.body.id);
+            sinon.assert.calledWith(stubbedResponse.status, 200);
+        });
+        
+        it("should respond 404 if service responds null", async () => {
+            //Arrange
+            stubbedService.getAccountById.resolves(null);
+            
+            //Act
+            const response = await testController.tokenLogin(testRequest, stubbedResponse);
+            
+            //Assert
+            sinon.assert.calledWith(stubbedResponse.status, 404);
+        });
+    });
 });

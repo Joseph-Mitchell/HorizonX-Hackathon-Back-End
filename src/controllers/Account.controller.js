@@ -29,4 +29,19 @@ export default class AccountController {
             return res.status(500).json({ message: e.message });
         }
     }
+    
+    async tokenLogin(req, res) {
+        try {
+            const response = await this.#accountService.getAccountById(req.body.id);
+            
+            if (response === null)
+                return res.status(404).json({ message: "No user found" });
+            
+            const signedToken = jwt.sign({ id: response._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+            return res.status(200).json({ token: signedToken });
+        } catch (e) {
+            console.log(e.message);
+            return res.status(500).json({ message: e.message });
+        }
+    }
 }
