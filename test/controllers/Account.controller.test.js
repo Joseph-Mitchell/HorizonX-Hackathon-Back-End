@@ -24,16 +24,16 @@ describe("Account Controller", () => {
             testController = new AccountController(stubbedService);
             testRequest = {
                 body: {
-                    username: existingAccounts.admin.username,
-                    password: existingAccounts.admin.password,
+                    username: existingAccounts[0].username,
+                    password: existingAccounts[0].password,
                 }
             };
             
             const responseAccount = {
                 _id: "testId",
-                username: existingAccounts.admin.username,
-                password: bcrypt.hashSync(existingAccounts.admin.password, 8),
-                role: existingAccounts.admin.role,
+                username: existingAccounts[0].username,
+                password: bcrypt.hashSync(existingAccounts[0].password, 8),
+                role: existingAccounts[0].role,
             };
             stubbedService.getAccountByUsername.resolves(responseAccount);
         });

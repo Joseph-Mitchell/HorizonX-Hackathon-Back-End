@@ -11,7 +11,7 @@ import LanguageModel from "../../src/models/LanguageModel.model.js";
 import { existingModels } from "../data/testModels.js";
 import { assert } from "chai";
 
-describe("Account Integration Tests", () => {
+describe("Language Model Integration Tests", () => {
     let server;
     let database;
     let requester;

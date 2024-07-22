@@ -18,7 +18,7 @@ export default class AccountController {
     async login(req, res) {
         try {
             const response = await this.#accountService.getAccountByUsername(req.body.username);
-            
+
             if (response === null || !bcrypt.compareSync(req.body.password, response.password))
                 return res.status(404).json({ message: "Incorrect username or password" });
             

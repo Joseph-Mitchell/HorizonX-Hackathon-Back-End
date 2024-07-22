@@ -11,15 +11,30 @@ export const existingRoles = [
     }
 ];
 
-export const existingAccounts = {
-    admin: {
+export const existingAccounts = [
+    {
         username: "adminUser",
         password: "testPass",
         role: "669e6b24240de0b241684275",
     },
-    user: {
+    {
         username: "normalUser",
         password: "testPass",
         role: "669e6af4240de0b241684274",
     },
+];
+
+export const testLogins = {
+    normal: {
+        username: "adminUser",
+        password: "testPass",
+    },
+    noUser: {
+        username: "wrongUser",
+        password: "testPass",
+    },
+    wrongPass: {
+        username: "adminUser",
+        password: "wrongPass",
+    }
 }
