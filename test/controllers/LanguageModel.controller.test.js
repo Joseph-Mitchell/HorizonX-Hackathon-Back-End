@@ -54,4 +54,52 @@ describe("Account Controller", () => {
             sinon.assert.calledWith(stubbedResponse.status, 404);
         })
     });
+    
+    describe("getList", () => {
+        let responseModel;
+        
+        beforeEach(() => {
+            responseModel = {};
+            
+            stubbedService = {
+                getModelById: sinon.stub(),
+            };
+            stubbedResponse = {
+                status: sinon.stub().returnsThis(),
+                json: sinon.stub()
+            };
+            
+            testController = new LanguageModelController(stubbedService);
+            testRequest = { params: { id: 1234 } }
+            
+            stubbedService.getModelById.resolves({ models: responseModel });
+        });
+        
+        afterEach(() => {
+            responseModel = undefined;
+            stubbedService = undefined;
+            stubbedResponse = undefined;
+            testController = undefined;
+        });
+        
+        it("should respond with 200 in normal circumstances", async () => {
+            //Act
+            await testController.getModel(testRequest, stubbedResponse);
+            
+            //Assert
+            sinon.assert.calledWith(stubbedService.getModelById, testRequest.params.id);
+            sinon.assert.calledWith(stubbedResponse.status, 200);
+        });
+        
+        it("should respond with 404 if getList resolves to empty array", async () => {
+            //Arrange
+            stubbedService.getModelById.resolves(null);
+            
+            //Act
+            await testController.getModel(testRequest, stubbedResponse);
+            
+            //Assert
+            sinon.assert.calledWith(stubbedResponse.status, 404);
+        });
+    });
 });
