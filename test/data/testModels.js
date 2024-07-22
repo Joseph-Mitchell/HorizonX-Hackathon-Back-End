@@ -1,5 +1,6 @@
 export const existingModels = [
     {
+        _id: "669e1a58266ddadc5bd715c3",
         name: "Gemini 1.5 Flash",
         organization: "Google DeepMind",
         description: "Gemini Flash is a lightweight model, optimized for speed and efficiency. It features multimodal reasoning and a breakthrough long context window of up to one million tokens. It's designed to serve at scale and is efficient on cost, providing quality results at a fraction of the cost of larger models.",
@@ -18,6 +19,7 @@ export const existingModels = [
         feedback: "none",
     },
     {
+        _id: "669e1a654aa2cf5cf237723d",
         name: "Gemini 1.5 Flash",
         organization: "Google DeepMind",
         description: "Gemini Flash is a lightweight model, optimized for speed and efficiency. It features multimodal reasoning and a breakthrough long context window of up to one million tokens. It's designed to serve at scale and is efficient on cost, providing quality results at a fraction of the cost of larger models.",

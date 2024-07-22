@@ -80,6 +80,41 @@ describe("Account Integration Tests", () => {
             
             //Assert
             assert.equal(actual.status, 500);
+            
+            //Cleanup
+            await database.connect();
+        });
+    });
+    
+    describe("Get Model Details", () => {
+        it("should respond with 200 in normal circumstances", async () => {
+            //Act
+            const actual = await requester.get("/models/669e1a58266ddadc5bd715c3");
+
+            //Assert
+            assert.equal(actual.status, 200);
+        });
+        
+        it("should respond with 404 if wrong id given", async () => {      
+            //Act
+            const actual = await requester.get("/models/669e1b0ad10bfdf30f6293c1");
+            
+            //Assert
+            assert.equal(actual.status, 404);
+        });
+        
+        it("should respond with 500 if database offline", async () => {
+            //Arrange
+            await database.close();
+            
+            //Act
+            const actual = await requester.get("/models/669e1a58266ddadc5bd715c3");
+            
+            //Assert
+            assert.equal(actual.status, 500);
+            
+            //Cleanup
+            await database.connect();
         });
     });
 });

@@ -25,5 +25,9 @@ export default class LanguageModelRouter {
         this.#router.get("/all", (req, res) => {
             this.#controller.getList(req, res);
         });
+        
+        this.#router.get("/:id", (req, res) => {
+            this.#controller.getModel(req, res);
+        });
     }
 }
