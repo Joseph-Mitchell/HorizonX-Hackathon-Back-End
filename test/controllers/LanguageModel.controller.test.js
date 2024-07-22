@@ -2,7 +2,7 @@ import sinon from "sinon";
 import { assert } from "chai";
 import LanguageModelController from "../../src/controllers/LanguageModel.controller.js";
 
-describe("Account Controller", () => {
+describe("Language Model Controller", () => {
     let stubbedService;
     let stubbedResponse;
     let testController;
