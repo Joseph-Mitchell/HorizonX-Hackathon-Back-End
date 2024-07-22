@@ -8,8 +8,10 @@ import LanguageModelService from './services/LanguageModel.service.js';
 Config.load();
 const { PORT, HOST, DB_URI } = process.env;
 
-const languageModelRouter = new LanguageModelRouter(new LanguageModelController(new LanguageModelService()), "/models")
-const routers = [languageModelRouter];
+const languageModelRouter = new LanguageModelRouter(new LanguageModelController(new LanguageModelService()), "/models");
+const accountRouter = new AccountRouter(new AccountController(new AccountService()), "/accounts");
+
+const routers = [languageModelRouter, accountRouter];
 const server = new Server(PORT, HOST, routers);
 const database = new Database(DB_URI);
 

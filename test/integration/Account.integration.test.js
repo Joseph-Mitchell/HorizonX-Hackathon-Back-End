@@ -24,9 +24,9 @@ describe("Account Integration Tests", () => {
         Config.load();
         const { PORT, HOST, DB_URI } = process.env;
 
-        const languageModelRouter = new AccountRouter(new AccountController(new AccountService()), "/accounts");
+        const accountRouter = new AccountRouter(new AccountController(new AccountService()), "/accounts");
 
-        server = new Server(PORT, HOST, [languageModelRouter]);
+        server = new Server(PORT, HOST, [accountRouter]);
         database = new Database(DB_URI);
 
         server.start();
@@ -89,5 +89,49 @@ describe("Account Integration Tests", () => {
             //Assert
             assert.equal(response.status, 404);
         });
-    })
+    });
+    
+    describe("Login With Token", () => {
+        it("should respond 200 in normal circumstances", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester.post("/accounts/logintoken").set({ "Authentication": token });
+            
+            //Assert
+            assert.equal(response.status, 200);
+            assert.isOk(jwt.verify(response.body.token, process.env.SECRET));
+        });
+        
+        it("should respond 401 if no token given", async () => {
+            //Act
+            const response = await requester.post("/accounts/logintoken");
+            
+            //Assert
+            assert.equal(response.status, 401);
+        });
+        
+        it("should respond 401 if token is invalid", async () => {
+            //Arrange
+            const token = "invalidToken";
+
+            //Act
+            const response = await requester.post("/accounts/logintoken").set({ "Authentication": token });
+            
+            //Assert
+            assert.equal(response.status, 401);
+        });
+        
+        it("should respond 404 if given id has no match", async () => {
+            //Arrange
+            const token = jwt.sign({ id: "669e9e63fb809ab035750a75" }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester.post("/accounts/logintoken").set({ "Authentication": token });
+            
+            //Assert
+            assert.equal(response.status, 404);
+        });
+    });
 });

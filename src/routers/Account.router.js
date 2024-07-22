@@ -1,4 +1,5 @@
 import { Router as ExpressRouter } from "express";
+import AccountMiddleware from "../middleware/Account.middleware.js";
 
 export default class AccountRouter {
     #router;
@@ -24,6 +25,9 @@ export default class AccountRouter {
     #initialiseRouter() {
         this.#router.post("/login", (req, res) => {
             this.#controller.login(req, res);
+        });
+        this.#router.post("/logintoken", AccountMiddleware.authenticateToken, (req, res) => {
+            this.#controller.tokenLogin(req, res);
         });
     }
 }

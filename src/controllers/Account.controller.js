@@ -33,7 +33,7 @@ export default class AccountController {
     async tokenLogin(req, res) {
         try {
             const response = await this.#accountService.getAccountById(req.body.id);
-            
+
             if (response === null)
                 return res.status(404).json({ message: "No user found" });
             
