@@ -40,8 +40,7 @@ export default class LanguageModelController {
     async deleteModel(req, res) {
         try {
             const accountResponse = await this.#accountService.getAccountRoleById(req.body.id);
-            
-            if (!accountResponse.admin_permissions) {
+            if (!accountResponse.role || !accountResponse.role.admin_permissions) {
                 return res.status(403).json({ message: "User is not authorized" });
             }
             
@@ -51,7 +50,7 @@ export default class LanguageModelController {
                 return res.status(404).json({ message: "No model with this id was found" });
             }
             
-            return res.status(204);
+            return res.status(204).json();
         } catch (e) {
             console.log(e.message);
             return res.status(500).json({ message: e.message });

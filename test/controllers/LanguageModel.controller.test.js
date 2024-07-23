@@ -129,7 +129,7 @@ describe("Language Model Controller", () => {
             testRequest = { params: { id: 1234 }, body: { id: 5678 } };
             
             stubbedModelService.deleteModelById.resolves({ models: responseModel });
-            stubbedAccountService.getAccountRoleById.resolves({ admin_permissions: true });
+            stubbedAccountService.getAccountRoleById.resolves({ role: { admin_permissions: true } });
         });
         
         afterEach(() => {
@@ -151,7 +151,7 @@ describe("Language Model Controller", () => {
         
         it("should respond 403 if account service call resolves with false admin_permissions", async () => {
             //Arrange
-            stubbedAccountService.getAccountRoleById.resolves({ admin_permissions: false });
+            stubbedAccountService.getAccountRoleById.resolves({ role: { admin_permissions: false } });
             
             //Act
             await testController.deleteModel(testRequest, stubbedResponse);
@@ -162,7 +162,7 @@ describe("Language Model Controller", () => {
         
         it("should respond 403 if account service call resolves with undefined admin_permissions", async () => {
             //Arrange
-            stubbedAccountService.getAccountRoleById.resolves({});
+            stubbedAccountService.getAccountRoleById.resolves({ role: {} });
             
             //Act
             await testController.deleteModel(testRequest, stubbedResponse);

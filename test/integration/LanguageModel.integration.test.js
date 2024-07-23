@@ -9,8 +9,11 @@ import LanguageModelService from "../../src/services/LanguageModel.service.js";
 import LanguageModel from "../../src/models/LanguageModel.model.js";
 
 import { existingModels } from "../data/testModels.js";
+import { existingAccounts } from "../data/testAccounts.js";
 import { assert } from "chai";
 import AccountService from "../../src/services/Account.service.js";
+
+import jwt from "jsonwebtoken";
 
 describe("Language Model Integration Tests", () => {
     let server;
@@ -120,12 +123,49 @@ describe("Language Model Integration Tests", () => {
     });
     
     describe("Delete Model", () => {
-        // it("should respond with 204 in normal circumstances", async () => {
-        //     //Act
-        //     const actual = await requester.delete("/models/669e1a58266ddadc5bd715c3");
+        it("should respond with 204 in normal circumstances", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
 
-        //     //Assert
-        //     assert.equal(actual.status, 204);
-        // });
+            //Act
+            const response = await requester
+                .delete("/models/669e1a58266ddadc5bd715c3")
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 204);
+            
+            const assertResponse = await requester.get("/models/669e1a58266ddadc5bd715c3");           
+            assert.equal(assertResponse.status, 404);
+        });
+        
+        it("should respond with 403 if token user is not authorized", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[1]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .delete("/models/669e1a58266ddadc5bd715c3")
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 403);
+            
+            const assertResponse = await requester.get("/models/669e1a58266ddadc5bd715c3");           
+            assert.equal(assertResponse.status, 200);
+        });
+        
+        it("should respond with 404 if given model does not exist", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .delete("/models/669e1b0ad10bfdf30f6293c1")
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 404);
+        });
     });
 });
