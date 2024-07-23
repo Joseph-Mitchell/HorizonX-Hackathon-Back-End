@@ -117,4 +117,14 @@ describe("Language Model Integration Tests", () => {
             await database.connect();
         });
     });
+    
+    describe("Delete Model", () => {
+        // it("should respond with 204 in normal circumstances", async () => {
+        //     //Act
+        //     const actual = await requester.delete("/models/669e1a58266ddadc5bd715c3");
+
+        //     //Assert
+        //     assert.equal(actual.status, 204);
+        // });
+    });
 });
