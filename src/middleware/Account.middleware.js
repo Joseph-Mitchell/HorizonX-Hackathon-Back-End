@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
+import AccountService from "../services/Account.service.js";
 
 export default class AccountMiddleware {
+    accountService = new AccountService();
+    
     static authenticateToken = (req, res, next) => {
         let token = req.headers["authentication"];
         

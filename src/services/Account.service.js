@@ -8,4 +8,8 @@ export default class AccountService {
     async getAccountById(id) {
         return await Account.findById(id);
     }
+    
+    async getAccountRoleById(id) {
+        return await Account.findById(id).select("role").populate("role", "admin_permissions")
+    }
 }

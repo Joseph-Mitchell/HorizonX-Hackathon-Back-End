@@ -11,7 +11,7 @@ import AccountService from './services/Account.service.js';
 Config.load();
 const { PORT, HOST, DB_URI } = process.env;
 
-const languageModelRouter = new LanguageModelRouter(new LanguageModelController(new LanguageModelService()), "/models");
+const languageModelRouter = new LanguageModelRouter(new LanguageModelController(new LanguageModelService(), new AccountService()), "/models");
 const accountRouter = new AccountRouter(new AccountController(new AccountService()), "/accounts");
 
 const routers = [languageModelRouter, accountRouter];

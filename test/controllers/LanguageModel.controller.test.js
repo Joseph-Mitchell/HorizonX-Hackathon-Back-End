@@ -3,7 +3,8 @@ import { assert } from "chai";
 import LanguageModelController from "../../src/controllers/LanguageModel.controller.js";
 
 describe("Language Model Controller", () => {
-    let stubbedService;
+    let stubbedModelService;
+    let stubbedAccountService;
     let stubbedResponse;
     let testController;
     let testRequest;
@@ -14,22 +15,24 @@ describe("Language Model Controller", () => {
         beforeEach(() => {
             responseModels = [{}, {}];
             
-            stubbedService = {
+            stubbedModelService = {
                 getList: sinon.stub(),
             };
+            stubbedAccountService = {};
             stubbedResponse = {
                 status: sinon.stub().returnsThis(),
                 json: sinon.stub()
             };
             
-            testController = new LanguageModelController(stubbedService);
+            testController = new LanguageModelController(stubbedModelService, stubbedAccountService);
             
-            stubbedService.getList.resolves({ models: responseModels });
+            stubbedModelService.getList.resolves({ models: responseModels });
         });
         
         afterEach(() => {
             responseModels = undefined;
-            stubbedService = undefined;
+            stubbedModelService = undefined;
+            stubbedAccountService = undefined;
             stubbedResponse = undefined;
             testController = undefined;
         });
@@ -39,13 +42,13 @@ describe("Language Model Controller", () => {
             await testController.getList(testRequest, stubbedResponse);
             
             //Assert
-            sinon.assert.called(stubbedService.getList);
+            sinon.assert.called(stubbedModelService.getList);
             sinon.assert.calledWith(stubbedResponse.status, 200);
         });
         
         it("should respond with 404 if getList resolves to empty array", async () => {
             //Arrange
-            stubbedService.getList.resolves([]);
+            stubbedModelService.getList.resolves([]);
             
             //Act
             await testController.getList(testRequest, stubbedResponse);
@@ -55,29 +58,31 @@ describe("Language Model Controller", () => {
         })
     });
     
-    describe("getList", () => {
+    describe("getModel", () => {
         let responseModel;
         
         beforeEach(() => {
             responseModel = {};
             
-            stubbedService = {
+            stubbedModelService = {
                 getModelById: sinon.stub(),
             };
+            stubbedAccountService = {};
             stubbedResponse = {
                 status: sinon.stub().returnsThis(),
                 json: sinon.stub()
             };
             
-            testController = new LanguageModelController(stubbedService);
+            testController = new LanguageModelController(stubbedModelService, stubbedAccountService);
             testRequest = { params: { id: 1234 } }
             
-            stubbedService.getModelById.resolves({ models: responseModel });
+            stubbedModelService.getModelById.resolves({ models: responseModel });
         });
         
         afterEach(() => {
             responseModel = undefined;
-            stubbedService = undefined;
+            stubbedModelService = undefined;
+            stubbedAccountService = undefined;
             stubbedResponse = undefined;
             testController = undefined;
         });
@@ -87,13 +92,13 @@ describe("Language Model Controller", () => {
             await testController.getModel(testRequest, stubbedResponse);
             
             //Assert
-            sinon.assert.calledWith(stubbedService.getModelById, testRequest.params.id);
+            sinon.assert.calledWith(stubbedModelService.getModelById, testRequest.params.id);
             sinon.assert.calledWith(stubbedResponse.status, 200);
         });
         
         it("should respond with 404 if getList resolves to empty array", async () => {
             //Arrange
-            stubbedService.getModelById.resolves(null);
+            stubbedModelService.getModelById.resolves(null);
             
             //Act
             await testController.getModel(testRequest, stubbedResponse);
@@ -103,29 +108,34 @@ describe("Language Model Controller", () => {
         });
     });
     
-    describe("getList", () => {
+    describe("deleteModel", () => {
         let responseModel;
         
         beforeEach(() => {
             responseModel = {};
             
-            stubbedService = {
+            stubbedModelService = {
                 deleteModelById: sinon.stub(),
             };
+            stubbedAccountService = {
+                getAccountRoleById: sinon.stub(),
+            }
             stubbedResponse = {
                 status: sinon.stub().returnsThis(),
                 json: sinon.stub()
             };
             
-            testController = new LanguageModelController(stubbedService);
-            testRequest = { params: { id: 1234 } };
+            testController = new LanguageModelController(stubbedModelService, stubbedAccountService);
+            testRequest = { params: { id: 1234 }, body: { id: 5678 } };
             
-            stubbedService.deleteModelById.resolves({ models: responseModel });
+            stubbedModelService.deleteModelById.resolves({ models: responseModel });
+            stubbedAccountService.getAccountRoleById.resolves({ admin_permissions: true });
         });
         
         afterEach(() => {
             responseModel = undefined;
-            stubbedService = undefined;
+            stubbedModelService = undefined;
+            stubbedAccountService = undefined;
             stubbedResponse = undefined;
             testController = undefined;
         });
@@ -135,13 +145,35 @@ describe("Language Model Controller", () => {
             await testController.deleteModel(testRequest, stubbedResponse);
 
             //Assert
-            sinon.assert.calledWith(stubbedService.deleteModelById, testRequest.params.id);
+            sinon.assert.calledWith(stubbedModelService.deleteModelById, testRequest.params.id);
             sinon.assert.calledWith(stubbedResponse.status, 204);
+        });
+        
+        it("should respond 403 if account service call resolves with false admin_permissions", async () => {
+            //Arrange
+            stubbedAccountService.getAccountRoleById.resolves({ admin_permissions: false });
+            
+            //Act
+            await testController.deleteModel(testRequest, stubbedResponse);
+
+            //Assert
+            sinon.assert.calledWith(stubbedResponse.status, 403);
+        });
+        
+        it("should respond 403 if account service call resolves with undefined admin_permissions", async () => {
+            //Arrange
+            stubbedAccountService.getAccountRoleById.resolves({});
+            
+            //Act
+            await testController.deleteModel(testRequest, stubbedResponse);
+
+            //Assert
+            sinon.assert.calledWith(stubbedResponse.status, 403);
         });
         
         it("should respond 404 if service call resolves null", async () => {
             //Arrange
-            stubbedService.deleteModelById.resolves(null);
+            stubbedModelService.deleteModelById.resolves(null);
             
             //Act
             await testController.deleteModel(testRequest, stubbedResponse);

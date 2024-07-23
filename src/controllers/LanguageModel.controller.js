@@ -1,8 +1,10 @@
 export default class LanguageModelController {
     #llmService;
+    #accountService;
     
-    constructor(llmService) {
+    constructor(llmService, accountService) {
         this.#llmService = llmService;
+        this.#accountService = accountService;
     }
     
     async getList(req, res) {
@@ -37,9 +39,15 @@ export default class LanguageModelController {
     
     async deleteModel(req, res) {
         try {
-            const response = await this.#llmService.deleteModelById(req.params.id);
+            const accountResponse = await this.#accountService.getAccountRoleById(req.body.id);
             
-            if (response === null) {
+            if (!accountResponse.admin_permissions) {
+                return res.status(403).json({ message: "User is not authorized" });
+            }
+            
+            const modelResponse = await this.#llmService.deleteModelById(req.params.id);
+            
+            if (modelResponse === null) {
                 return res.status(404).json({ message: "No model with this id was found" });
             }
             

@@ -9,7 +9,7 @@ describe("Account Middleware", () => {
     let testRequest;
     
     describe("authenticateToken", () => {
-        let testId = 123;
+        const testId = 123;
         
         beforeEach(() => {           
             process.env.SECRET = "testSecret";

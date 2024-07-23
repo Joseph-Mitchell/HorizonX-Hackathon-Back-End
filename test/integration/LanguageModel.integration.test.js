@@ -10,6 +10,7 @@ import LanguageModel from "../../src/models/LanguageModel.model.js";
 
 import { existingModels } from "../data/testModels.js";
 import { assert } from "chai";
+import AccountService from "../../src/services/Account.service.js";
 
 describe("Language Model Integration Tests", () => {
     let server;
@@ -20,7 +21,7 @@ describe("Language Model Integration Tests", () => {
         Config.load();
         const { PORT, HOST, DB_URI } = process.env;
 
-        const languageModelRouter = new LanguageModelRouter(new LanguageModelController(new LanguageModelService()), "/models");
+        const languageModelRouter = new LanguageModelRouter(new LanguageModelController(new LanguageModelService(), new AccountService()), "/models");
 
         server = new Server(PORT, HOST, [languageModelRouter]);
         database = new Database(DB_URI);
