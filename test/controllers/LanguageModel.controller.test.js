@@ -102,4 +102,52 @@ describe("Language Model Controller", () => {
             sinon.assert.calledWith(stubbedResponse.status, 404);
         });
     });
+    
+    describe("getList", () => {
+        let responseModel;
+        
+        beforeEach(() => {
+            responseModel = {};
+            
+            stubbedService = {
+                deleteModelById: sinon.stub(),
+            };
+            stubbedResponse = {
+                status: sinon.stub().returnsThis(),
+                json: sinon.stub()
+            };
+            
+            testController = new LanguageModelController(stubbedService);
+            testRequest = { params: { id: 1234 } };
+            
+            stubbedService.deleteModelById.resolves({ models: responseModel });
+        });
+        
+        afterEach(() => {
+            responseModel = undefined;
+            stubbedService = undefined;
+            stubbedResponse = undefined;
+            testController = undefined;
+        });
+        
+        it("should respond 204 in normal circumstances", async () => {
+            //Act
+            await testController.deleteModel(testRequest, stubbedResponse);
+
+            //Assert
+            sinon.assert.calledWith(stubbedService.deleteModelById, testRequest.params.id);
+            sinon.assert.calledWith(stubbedResponse.status, 204);
+        });
+        
+        it("should respond 404 if service call resolves null", async () => {
+            //Arrange
+            stubbedService.deleteModelById.resolves(null);
+            
+            //Act
+            await testController.deleteModel(testRequest, stubbedResponse);
+
+            //Assert
+            sinon.assert.calledWith(stubbedResponse.status, 404);
+        });
+    });
 });

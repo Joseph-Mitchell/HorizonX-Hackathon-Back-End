@@ -7,7 +7,7 @@ export default class LanguageModelController {
     
     async getList(req, res) {
         try {
-            let response = await this.#llmService.getList();
+            const response = await this.#llmService.getList();
             
             if (response.length === 0) {
                 return res.status(404).json({ message: "No results to display" });
@@ -22,13 +22,28 @@ export default class LanguageModelController {
     
     async getModel(req, res) {
         try {
-            let response = await this.#llmService.getModelById(req.params.id);
+            const response = await this.#llmService.getModelById(req.params.id);
             
             if (response === null) {
-                return res.status(404).json({ message: "A model with this id was not found" });
+                return res.status(404).json({ message: "No model with this id was found" });
             }
             
             return res.status(200).json({ model: response });
+        } catch (e) {
+            console.log(e.message);
+            return res.status(500).json({ message: e.message });
+        }
+    }
+    
+    async deleteModel(req, res) {
+        try {
+            const response = await this.#llmService.deleteModelById(req.params.id);
+            
+            if (response === null) {
+                return res.status(404).json({ message: "No model with this id was found" });
+            }
+            
+            return res.status(204);
         } catch (e) {
             console.log(e.message);
             return res.status(500).json({ message: e.message });

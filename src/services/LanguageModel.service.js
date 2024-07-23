@@ -8,4 +8,8 @@ export default class LanguageModelService {
     async getModelById(id) {
         return await LanguageModel.findById(id);
     }
+    
+    async deleteModelById(id) {
+        return await LanguageModel.findByIdAndDelete(id);
+    }
 }
