@@ -7,7 +7,7 @@ export default class Config {
     static load() {
         if (Config.#nodeEnv !== "prod") {
             config({
-                path: "src/config/.env.dev"
+                path: `src/config/.env.${Config.#nodeEnv}`
             });
         }
     }

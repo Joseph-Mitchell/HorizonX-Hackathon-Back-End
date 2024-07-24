@@ -56,4 +56,39 @@ export default class LanguageModelController {
             return res.status(500).json({ message: e.message });
         }
     }
+    
+    async createModel(req, res) {
+        try {
+            const accountResponse = await this.#accountService.getAccountRoleById(req.body.id);
+            if (!accountResponse.role || !accountResponse.role.admin_permissions) 
+                return res.status(403).json({ message: "User is not authorized" });
+            
+            const modelResponse = await this.#llmService.createModel(
+                req.body.name,
+                req.body.organization,
+                req.body.description,
+                req.body.date_created,
+                req.body.url,
+                req.body.datasheet_url,
+                req.body.modality,
+                req.body.model_analysis,
+                req.body.size,
+                req.body.dependencies,
+                req.body.quality_control,
+                req.body.access,
+                req.body.license,
+                req.body.intended_uses,
+                req.body.prohibited_uses,
+                req.body.monitoring,
+                req.body.feedback,
+            );
+            if (modelResponse === null) 
+                return res.status(400).json({ message: "Model could not be created with the given parameters" });
+            
+            return res.status(204).json();
+        } catch (e) {
+            console.log(e.message);
+            return res.status(500).json({ message: e.message });
+        }
+    }
 }

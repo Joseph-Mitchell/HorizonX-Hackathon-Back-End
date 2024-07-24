@@ -29,3 +29,28 @@ export const existingModels = [
         intended_uses: "The model is intended for developer and enterprise use cases. It can process hours of video and audio, and hundreds of thousands of words or lines of code, making it beneficial for a wide range of tasks.",
     },
 ];
+
+export const newModels = {
+    normalModel: {
+        name: "New Model",
+        organization: "New Organization",
+        description: "This is a test model",
+        date_created: "May 30, 2024",
+        url: "https://deepmind.google/technologies/gemini/flash/",
+        datasheet_url: "datasheet",
+        modality: "audio, image, text, video; text",
+        model_analysis: "Test analysis",
+        size: "10MB",
+        dependencies: [{
+            name: "Dependency 1",
+            url: "Url 1"
+        }],
+        quality_control: "Test quality control",
+        access: "limited",
+        license: "Test licence",
+        intended_uses: "Test intentions",
+        prohibited_uses: "Test prohibitions",
+        monitoring: "Test monitoring",
+        feedback: "Test feedback",
+    },
+}
