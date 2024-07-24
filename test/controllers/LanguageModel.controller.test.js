@@ -237,7 +237,7 @@ describe("Language Model Controller", () => {
             testController = undefined;
         });
         
-        it("should respond 204 in normal circumstances", async () => {
+        it("should respond 201 in normal circumstances", async () => {
             //Act
             await testController.createModel(testRequest, stubbedResponse);
 
@@ -262,7 +262,7 @@ describe("Language Model Controller", () => {
                 testRequest.body.monitoring,
                 testRequest.body.feedback,
             );
-            sinon.assert.calledWith(stubbedResponse.status, 204);
+            sinon.assert.calledWith(stubbedResponse.status, 201);
         });
         
         it("should respond 403 if account service call resolves with undefined admin_permissions", async () => {

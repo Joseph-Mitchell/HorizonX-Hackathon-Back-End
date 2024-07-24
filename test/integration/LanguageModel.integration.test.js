@@ -8,7 +8,7 @@ import LanguageModelController from "../../src/controllers/LanguageModel.control
 import LanguageModelService from "../../src/services/LanguageModel.service.js";
 import LanguageModel from "../../src/models/LanguageModel.model.js";
 
-import { existingModels } from "../data/testModels.js";
+import { existingModels, newModels } from "../data/testModels.js";
 import { existingAccounts } from "../data/testAccounts.js";
 import { assert } from "chai";
 import AccountService from "../../src/services/Account.service.js";
@@ -166,6 +166,518 @@ describe("Language Model Integration Tests", () => {
 
             //Assert
             assert.equal(response.status, 404);
+        });
+    });
+    
+    describe("Create Model", () => {
+        it("should respond with 201 in normal circumstances", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.normalModel)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 400 if name empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyName)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if name missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingName)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if organization empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyOrganization)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if organization missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingOrganization)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if date empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyDate)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if date missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingDate)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if date invalid", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.invalidDate)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 201 if date utc format", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.utcDate)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 400 if url empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyURL)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if url missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingURL)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 400 if url invalid", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.invalidURL)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if datasheet url empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyDatasheet)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 201 if datasheet url missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingDatasheet)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 400 if datasheet url invalid", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.invalidDatasheet)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if modality empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyModality)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if modality empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingModality)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if dependency name empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyDependencyName)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if dependency name missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingDependencyName)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if dependency url empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyDependencyURL)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 201 if dependency url missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingDependencyURL)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 400 if dependency url invalid", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.invalidDependencyURL)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 201 if dependency array empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyDependencies)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 201 if dependency array missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingDependencies)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 201 if access is closed", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.closedAccess)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 201 if access is limited", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.limitedAccess)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 201);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 3);
+        });
+        
+        it("should respond with 400 if access is empty", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.emptyAccess)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if access is missing", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.missingAccess)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if access is invalid", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.invalidAccess)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
+        });
+        
+        it("should respond with 400 if access is contains multiple out of valid values", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .post("/models")
+                .send(newModels.multiAccess)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 400);
+            
+            const assertResponse = await requester.get("/models/all");           
+            assert.equal(assertResponse._body.models.length, 2);
         });
     });
 });

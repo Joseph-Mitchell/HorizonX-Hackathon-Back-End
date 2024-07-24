@@ -1,5 +1,6 @@
 import { Router as ExpressRouter } from "express";
 import AccountMiddleware from "../middleware/Account.middleware.js";
+import LanguageModelMiddleware from "../middleware/LanguageModel.middleware.js";
 
 export default class LanguageModelRouter {
     #router;
@@ -33,6 +34,10 @@ export default class LanguageModelRouter {
         
         this.#router.delete("/:id", AccountMiddleware.authenticateToken, (req, res) => {
             this.#controller.deleteModel(req, res);
+        });
+        
+        this.#router.post("/", [AccountMiddleware.authenticateToken, LanguageModelMiddleware.validateModelDetails()], (req, res) => {
+            this.#controller.createModel(req, res);
         });
     }
 }

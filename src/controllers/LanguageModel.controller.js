@@ -85,7 +85,7 @@ export default class LanguageModelController {
             if (modelResponse === null) 
                 return res.status(400).json({ message: "Model could not be created with the given parameters" });
             
-            return res.status(204).json();
+            return res.status(201).json({ model: modelResponse });
         } catch (e) {
             console.log(e.message);
             return res.status(500).json({ message: e.message });
