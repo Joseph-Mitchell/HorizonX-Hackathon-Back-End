@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import Role from "./Role.model.js";
 
 const accountSchema = new Schema({
     username: { type: String, required: true },
