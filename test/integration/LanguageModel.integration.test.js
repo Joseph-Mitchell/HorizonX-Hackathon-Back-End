@@ -680,4 +680,74 @@ describe("Language Model Integration Tests", () => {
             assert.equal(assertResponse._body.models.length, 2);
         });
     });
+    
+    describe("Edit Model", () => {
+        it("should respond with 204 in normal circumstances", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .put("/models/" + existingModels[0]._id)
+                .send(newModels.normalModel)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 204);
+            
+            const assertResponse = await requester.get("/models/all");
+            assert.equal(assertResponse._body.models[0].name, newModels.normalModel.name);
+        });
+        
+        it("should respond with 403 with unauthorized user", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[1]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .put("/models/" + existingModels[0]._id)
+                .send(newModels.normalModel)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 403);
+            
+            const assertResponse = await requester.get("/models/all");
+            assert.notEqual(assertResponse._body.models[0].name, newModels.normalModel.name);
+        });
+        
+        it("should respond with 401 with non existant user id", async () => {
+            //Arrange
+            const token = jwt.sign({ id: "66a106940fabd81ebcf76101" }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .put("/models/" + existingModels[0]._id)
+                .send(newModels.normalModel)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 401);
+            
+            const assertResponse = await requester.get("/models/all");
+            assert.notEqual(assertResponse._body.models[0].name, newModels.normalModel.name);
+        });
+        
+        it("should respond with 404 with non existant model id", async () => {
+            //Arrange
+            const token = jwt.sign({ id: existingAccounts[0]._id.toString() }, process.env.SECRET, { expiresIn: "1 week" });
+
+            //Act
+            const response = await requester
+                .put("/models/66a106940fabd81ebcf76101")
+                .send(newModels.normalModel)
+                .set({ "Authentication": token });
+
+            //Assert
+            assert.equal(response.status, 404);
+            
+            const assertResponse = await requester.get("/models/all");
+            assert.notEqual(assertResponse._body.models[0].name, newModels.normalModel.name);
+        });
+    });
 });

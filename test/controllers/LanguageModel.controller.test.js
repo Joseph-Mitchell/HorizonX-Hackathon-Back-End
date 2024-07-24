@@ -296,6 +296,7 @@ describe("Language Model Controller", () => {
             
             stubbedModelService = {
                 editModel: sinon.stub(),
+                getModelById: sinon.stub(),
             };
             stubbedAccountService = {
                 getAccountRoleById: sinon.stub(),

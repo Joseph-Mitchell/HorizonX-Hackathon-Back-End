@@ -39,5 +39,9 @@ export default class LanguageModelRouter {
         this.#router.post("/", [AccountMiddleware.authenticateToken, LanguageModelMiddleware.validateModelDetails()], (req, res) => {
             this.#controller.createModel(req, res);
         });
+        
+        this.#router.put("/:id", [AccountMiddleware.authenticateToken, LanguageModelMiddleware.validateModelDetails()], (req, res) => {
+            this.#controller.editModel(req, res);
+        });
     }
 }

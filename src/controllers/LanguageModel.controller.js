@@ -40,6 +40,8 @@ export default class LanguageModelController {
     async deleteModel(req, res) {
         try {
             const accountResponse = await this.#accountService.getAccountRoleById(req.body.id);
+            if (accountResponse === null)
+                return res.status(401).json({ message: "User was not found" });
             if (!accountResponse.role || !accountResponse.role.admin_permissions) {
                 return res.status(403).json({ message: "User is not authorized" });
             }
@@ -60,6 +62,8 @@ export default class LanguageModelController {
     async createModel(req, res) {
         try {
             const accountResponse = await this.#accountService.getAccountRoleById(req.body.id);
+            if (accountResponse === null)
+                return res.status(401).json({ message: "User was not found" });
             if (!accountResponse.role || !accountResponse.role.admin_permissions) 
                 return res.status(403).json({ message: "User is not authorized" });
             
@@ -95,8 +99,15 @@ export default class LanguageModelController {
     async editModel(req, res) {
         try {
             const accountResponse = await this.#accountService.getAccountRoleById(req.body.id);
+            if (accountResponse === null)
+                return res.status(401).json({ message: "User was not found" });
+            
             if (!accountResponse.role || !accountResponse.role.admin_permissions) 
                 return res.status(403).json({ message: "User is not authorized" });
+            
+            const existingModelResponse = await this.#llmService.getModelById(req.params.id);
+            if (existingModelResponse === null)
+                return res.status(404).json({ message: "Model with given id could not be found" });
             
             const modelResponse = await this.#llmService.editModel(
                 req.params.id,
