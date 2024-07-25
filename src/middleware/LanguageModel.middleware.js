@@ -25,13 +25,6 @@ export default class LanguageModelMiddleware {
                     .isURL()
                     .withMessage("Model url must be a valid url if given"),
                 expressValidator
-                    .body("datasheet_url")
-                    .optional()
-                    .notEmpty()
-                    .withMessage("Model datasheet url must not be empty if given")
-                    .isURL()
-                    .withMessage("Model datasheet url must be a valid url if given"),
-                expressValidator
                     .body("modality")
                     .notEmpty()
                     .withMessage("Model modality must not be empty"),
