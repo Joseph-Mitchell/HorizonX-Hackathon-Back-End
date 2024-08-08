@@ -8,13 +8,6 @@ export default class AccountController {
         this.#accountService = accountService;
     }
     
-    // try {
-        
-    // } catch (e) {
-    //     console.log(e.message);
-    //     return res.status(500).json({ message: e.message });
-    // }
-    
     async login(req, res) {
         try {
             const response = await this.#accountService.getAccountByUsername(req.body.username);
